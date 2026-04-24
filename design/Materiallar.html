@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1280, initial-scale=1" />
+<title>Uddala — Materiallar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap" />
+<style>
+  :root {
+    --uddala-primary: #1BA9F5;
+    --uddala-primary-dark: #0B8BD1;
+    --uddala-primary-soft: #E8F6FE;
+    --uddala-surface: #FFFFFF;
+    --uddala-surface-2: #F5F8FA;
+    --uddala-border: #E5EBF0;
+    --uddala-text: #0F1B24;
+    --uddala-text-muted: #4B5C69;
+    --uddala-text-soft: #8694A0;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #EFF2F5;
+    font-family: 'Manrope', system-ui, sans-serif;
+    color: var(--uddala-text);
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 1160px; margin: 0 auto; padding: 48px 32px 80px; }
+  .page-head { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+  .page-head img { width: 48px; height: 48px; object-fit: contain; }
+  h1 { margin: 0; font-size: 36px; font-weight: 900; letter-spacing: -1px; }
+  .page-sub { color: var(--uddala-text-muted); font-size: 14px; font-weight: 600; margin: 0 0 40px 64px; }
+
+  .section {
+    background: var(--uddala-surface);
+    border: 1px solid var(--uddala-border);
+    border-radius: 20px;
+    padding: 28px 28px 24px;
+    margin-bottom: 24px;
+  }
+  .section h2 { margin: 0 0 4px; font-size: 20px; font-weight: 800; letter-spacing: -0.4px; }
+  .section .desc { margin: 0 0 24px; color: var(--uddala-text-muted); font-size: 13px; font-weight: 600; }
+
+  .grid { display: grid; gap: 14px; }
+  .grid.cols-cat { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .grid.cols-role { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+
+  .tile {
+    background: var(--uddala-surface-2);
+    border: 1px solid var(--uddala-border);
+    border-radius: 16px;
+    padding: 20px 12px 16px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;
+  }
+  .tile .swatch {
+    width: 84px; height: 84px; border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tile .label { font-size: 13px; font-weight: 700; color: var(--uddala-text); line-height: 1.25; }
+  .tile .id { font-size: 10px; font-family: 'SF Mono', 'Menlo', ui-monospace, monospace; color: var(--uddala-text-soft); letter-spacing: 0.3px; }
+
+  .tile.role { flex-direction: row; justify-content: flex-start; text-align: left; padding: 14px 16px; gap: 14px; }
+  .tile.role .swatch { width: 72px; height: 72px; border-radius: 18px; flex-shrink: 0; }
+  .tile.role .meta { display: flex; flex-direction: column; gap: 2px; }
+
+  .logo-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+  .logo-cell {
+    background: var(--uddala-surface-2);
+    border: 1px solid var(--uddala-border);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    flex: 1; min-width: 160px;
+  }
+  .logo-cell.dark { background: #0F1B24; border-color: #1E2A35; color: #CBD3DA; }
+  .logo-cell img.sz-32 { width: 32px; height: 32px; object-fit: contain; }
+  .logo-cell img.sz-56 { width: 56px; height: 56px; object-fit: contain; }
+  .logo-cell img.sz-96 { width: 96px; height: 96px; object-fit: contain; }
+
+  .palette { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .swatch-cell {
+    background: var(--uddala-surface-2);
+    border: 1px solid var(--uddala-border);
+    border-radius: 14px; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .swatch-cell .color { height: 64px; }
+  .swatch-cell .meta { padding: 10px 12px; }
+  .swatch-cell .name { font-size: 13px; font-weight: 800; }
+  .swatch-cell .hex { font-size: 11px; color: var(--uddala-text-soft); font-family: 'SF Mono', 'Menlo', ui-monospace, monospace; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-head">
+    <img src="assets/logo-mark.png" alt="Uddala mark" />
+    <h1>Materiallar</h1>
+  </div>
+  <p class="page-sub">Uddala dizayn tizimi — logotip, rol iconlari, kategoriya iconlari va palitra</p>
+
+  <!-- LOGO -->
+  <div class="section">
+    <h2>Logotip</h2>
+    <p class="desc">Asosiy brend mark. Shaffof fonli PNG — barcha o'lchamlarda ishlatish mumkin.</p>
+    <div class="logo-row">
+      <div class="logo-cell"><img src="assets/logo-mark.png" class="sz-96" alt="96" /><div class="id">96 × 96</div></div>
+      <div class="logo-cell"><img src="assets/logo-mark.png" class="sz-56" alt="56" /><div class="id">56 × 56</div></div>
+      <div class="logo-cell"><img src="assets/logo-mark.png" class="sz-32" alt="32" /><div class="id">32 × 32</div></div>
+      <div class="logo-cell dark"><img src="assets/logo-mark.png" class="sz-56" alt="dark" /><div class="id">on dark</div></div>
+      <div class="logo-cell"><img src="assets/logo-full.png" style="height: 56px; width: auto;" alt="full" /><div class="id">full lockup</div></div>
+    </div>
+  </div>
+
+  <!-- ROLE ICONS -->
+  <div class="section">
+    <h2>Rol iconlari</h2>
+    <p class="desc">Onboarding — rol tanlash ekranidagi illustratsiyalar.</p>
+    <div class="grid cols-role">
+      <div class="tile role">
+        <div class="swatch" style="background:#E8F6FE;">
+          <svg width="52" height="52" viewBox="0 0 72 72">
+            <defs>
+              <radialGradient id="mR" cx="0.35" cy="0.32" r="0.75">
+                <stop offset="0%" stop-color="#BEE6FF"/>
+                <stop offset="55%" stop-color="#3FA9E0"/>
+                <stop offset="100%" stop-color="#1E6FA8"/>
+              </radialGradient>
+              <linearGradient id="mRr" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#7CC8F0"/>
+                <stop offset="100%" stop-color="#1B5E8C"/>
+              </linearGradient>
+              <linearGradient id="mRh" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#C8975A"/>
+                <stop offset="100%" stop-color="#7B4E22"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="36" cy="63" rx="18" ry="2.2" fill="black" opacity="0.12"/>
+            <rect x="43" y="39" width="7" height="22" rx="3" fill="url(#mRh)" transform="rotate(-42 46.5 50)"/>
+            <circle cx="28" cy="28" r="20" fill="url(#mRr)"/>
+            <circle cx="28" cy="28" r="15.5" fill="url(#mR)"/>
+            <path d="M17 22 Q22 15 30 15" stroke="white" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.7"/>
+            <circle cx="21.5" cy="21.5" r="1.6" fill="white" opacity="0.85"/>
+          </svg>
+        </div>
+        <div class="meta">
+          <div class="label" style="font-size:15px;">Mijoz</div>
+          <div class="id">customer — xizmat qidiruvchi</div>
+        </div>
+      </div>
+      <div class="tile role">
+        <div class="swatch" style="background:#0B8BD1;">
+          <svg width="52" height="52" viewBox="0 0 72 72">
+            <defs>
+              <linearGradient id="wB" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#C28757"/>
+                <stop offset="55%" stop-color="#9B5E2C"/>
+                <stop offset="100%" stop-color="#6C3C14"/>
+              </linearGradient>
+              <linearGradient id="wT" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#D8A371"/>
+                <stop offset="100%" stop-color="#A86D38"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="36" cy="62" rx="22" ry="2.4" fill="black" opacity="0.13"/>
+            <path d="M26 22 Q26 13 36 13 Q46 13 46 22" stroke="#7B4E22" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+            <rect x="10" y="22" width="52" height="34" rx="4" fill="url(#wB)"/>
+            <rect x="10" y="22" width="52" height="7" rx="3" fill="url(#wT)"/>
+            <line x1="10" y1="36" x2="62" y2="36" stroke="#5C3212" stroke-width="1" opacity="0.6"/>
+            <rect x="32.5" y="32.5" width="7" height="7" rx="1.2" fill="#E4B87A" stroke="#5C3212" stroke-width="0.8"/>
+            <rect x="34.3" y="35" width="3.4" height="1.2" rx="0.4" fill="#5C3212"/>
+          </svg>
+        </div>
+        <div class="meta">
+          <div class="label" style="font-size:15px;">Ishchi</div>
+          <div class="id">worker — xizmat ko'rsatuvchi</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY ICONS (React-rendered) -->
+  <div class="section">
+    <h2>Kategoriya iconlari</h2>
+    <p class="desc">Xizmat turlari — bold, illyustrativ, tanib olinadigan.</p>
+    <div class="grid cols-cat" id="cat-grid"></div>
+  </div>
+
+  <!-- PALETTE -->
+  <div class="section">
+    <h2>Rang palitrasi</h2>
+    <p class="desc">Brend va kategoriya ranglari.</p>
+    <div class="palette" id="palette"></div>
+  </div>
+</div>
+
+<!-- React + Babel to reuse CatIcon component -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="src/category-icons.jsx"></script>
+<script type="text/babel">
+(function () {
+  const CATS = [
+    { id: "plumber",   name: "Santexnika",       color: "#1BA9F5" },
+    { id: "electric",  name: "Elektr ishlari",   color: "#F5B700" },
+    { id: "cleaner",   name: "Tozalash",         color: "#16B378" },
+    { id: "repair",    name: "Ta'mir / asbob",   color: "#B23CE0" },
+    { id: "moving",    name: "Ko'chish",         color: "#F57C1B" },
+    { id: "ac",        name: "Konditsioner",     color: "#06B6D4" },
+    { id: "furniture", name: "Mebel yig'ish",    color: "#8B5CF6" },
+    { id: "beauty",    name: "Go'zallik",        color: "#EC4899" },
+    { id: "home",      name: "Uy ta'miri",       color: "#F57C1B" },
+    { id: "appliance", name: "Maishiy texnika",  color: "#06B6D4" },
+    { id: "gadget",    name: "Elektron texnika", color: "#6366F1" },
+    { id: "transport", name: "Transport",        color: "#0EA5E9" },
+    { id: "garden",    name: "Bog' va hovli",    color: "#22C55E" },
+    { id: "education", name: "Ta'lim",           color: "#F59E0B" },
+    { id: "it",        name: "IT xizmatlari",    color: "#0B8BD1" },
+    { id: "security",  name: "Xavfsizlik",       color: "#334155" },
+  ];
+
+  function App() {
+    return (
+      <>
+        {CATS.map((c) => (
+          <div className="tile" key={c.id}>
+            <div className="swatch" style={{
+              background: `color-mix(in oklch, ${c.color} 14%, white)`,
+            }}>
+              <CatIcon name={c.id} color={c.color} size={56} />
+            </div>
+            <div className="label">{c.name}</div>
+            <div className="id">{c.id} · {c.color}</div>
+          </div>
+        ))}
+      </>
+    );
+  }
+
+  // Mount once CatIcon is available
+  function mount() {
+    if (typeof window.CatIcon !== "function") {
+      return setTimeout(mount, 30);
+    }
+    ReactDOM.createRoot(document.getElementById("cat-grid")).render(<App />);
+  }
+  mount();
+
+  // --- Palette rendering (plain JS) ---
+  const BRAND = [
+    { name: "Primary",      hex: "#1BA9F5" },
+    { name: "Primary dark", hex: "#0B8BD1" },
+    { name: "Primary soft", hex: "#E8F6FE" },
+    { name: "Ink",          hex: "#0F1B24" },
+    { name: "Muted",        hex: "#4B5C69" },
+    { name: "Soft",         hex: "#8694A0" },
+    { name: "Border",       hex: "#E5EBF0" },
+    { name: "Surface-2",    hex: "#F5F8FA" },
+  ];
+  const pal = document.getElementById("palette");
+  [...BRAND, ...CATS.map((c) => ({ name: c.name, hex: c.color }))].forEach((s) => {
+    const el = document.createElement("div");
+    el.className = "swatch-cell";
+    el.innerHTML = `
+      <div class="color" style="background: ${s.hex}"></div>
+      <div class="meta">
+        <div class="name">${s.name}</div>
+        <div class="hex">${s.hex}</div>
+      </div>
+    `;
+    pal.appendChild(el);
+  });
+})();
+</script>
+</body>
+</html>

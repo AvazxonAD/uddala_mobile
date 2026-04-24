@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1440, initial-scale=0.6" />
+<title>Uddala — C2C xizmatlar prototipi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap" />
+<style>
+  :root {
+    --uddala-primary: #1BA9F5;
+    --uddala-primary-dark: #0B8BD1;
+    --uddala-primary-soft: #E8F6FE;
+    --uddala-surface: #FFFFFF;
+    --uddala-surface-2: #F5F8FA;
+    --uddala-border: #E5EBF0;
+    --uddala-text: #0F1B24;
+    --uddala-text-muted: #4B5C69;
+    --uddala-text-soft: #8694A0;
+  }
+  html, body { margin: 0; padding: 0; background: #EFF2F5; font-family: 'Manrope', system-ui, sans-serif; color: var(--uddala-text); -webkit-font-smoothing: antialiased; }
+  body.dark {
+    --uddala-surface: #12181E;
+    --uddala-surface-2: #1B232B;
+    --uddala-border: #2A343D;
+    --uddala-text: #F2F5F8;
+    --uddala-text-muted: #A5B2BD;
+    --uddala-text-soft: #6F7C87;
+    background: #0A0E12;
+  }
+  body.dark .app-page {
+    background: #0A0E12;
+  }
+  .app-page { min-height: 100vh; padding: 24px; }
+  .stage { display: flex; flex-direction: column; align-items: center; gap: 40px; }
+  .stage-header {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .stage-header h1 {
+    font-size: 34px; font-weight: 900; letter-spacing: -1px; margin: 0;
+  }
+  .stage-header p {
+    color: var(--uddala-text-muted); margin: 6px 0 0; font-size: 14px; font-weight: 600;
+  }
+  .pair {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 36px;
+    align-items: start;
+    padding: 0 16px;
+  }
+  .device-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .device-label {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase;
+    color: var(--uddala-text-soft);
+  }
+  .screen-nav {
+    display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
+    padding: 10px 14px;
+    background: var(--uddala-surface);
+    border: 1px solid var(--uddala-border);
+    border-radius: 14px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .screen-nav button {
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--uddala-border);
+    background: var(--uddala-surface-2);
+    color: var(--uddala-text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .nav-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--uddala-border);
+    margin: 0 4px;
+    align-self: center;
+  }
+  .screen-nav button.active {
+    background: var(--uddala-primary);
+    color: white;
+    border-color: var(--uddala-primary);
+  }
+  .tweak-toggle {
+    position: fixed; right: 16px; bottom: 16px; z-index: 9998;
+    padding: 10px 14px; border-radius: 999px; border: none;
+    background: var(--uddala-primary); color: white; font-weight: 800; font-size: 13px;
+    box-shadow: 0 10px 24px -8px var(--uddala-primary);
+    cursor: pointer; font-family: inherit;
+    display: none;
+  }
+  .tweak-toggle.show { display: inline-flex; align-items: center; gap: 6px; }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="frames/ios-frame.jsx"></script>
+  <script type="text/babel" src="frames/android-frame.jsx"></script>
+  <script type="text/babel" src="src/tokens.jsx"></script>
+  <script type="text/babel" src="src/ui.jsx"></script>
+  <script type="text/babel" src="src/data.jsx"></script>
+  <script type="text/babel" src="src/auth.jsx"></script>
+  <script type="text/babel" src="src/customer.jsx"></script>
+  <script type="text/babel" src="src/customer2.jsx"></script>
+  <script type="text/babel" src="src/worker.jsx"></script>
+  <script type="text/babel" src="src/tweaks.jsx"></script>
+
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "palette": "moviy",
+      "lang": "uz",
+      "postFlow": "quick",
+      "dark": false
+    }/*EDITMODE-END*/;
+
+    function App() {
+      const [settings, setSettings] = React.useState(TWEAK_DEFAULTS);
+      const [tweaksOpen, setTweaksOpen] = React.useState(false);
+      const [tweaksEnabled, setTweaksEnabled] = React.useState(false);
+
+      // Screen state — mirrored across two devices
+      const persisted = (() => {
+        try { return JSON.parse(localStorage.getItem("uddala-state") || "{}"); } catch(e){ return {}; }
+      })();
+      const [screen, setScreen] = React.useState(persisted.screen || "onboarding");
+      const [phone, setPhone] = React.useState(persisted.phone || "");
+      const [code, setCode] = React.useState(persisted.code || "");
+      const [activeWorker, setActiveWorker] = React.useState(persisted.activeWorker || "w1");
+      const [activeJob, setActiveJob] = React.useState(persisted.activeJob || "j1");
+      const [activeMyJob, setActiveMyJob] = React.useState(persisted.activeMyJob || "my1");
+      const [bidSheet, setBidSheet] = React.useState(false);
+      const [tanga, setTanga] = React.useState(12);
+
+      React.useEffect(() => {
+        try { localStorage.setItem("uddala-state", JSON.stringify({ screen, phone, code, activeWorker, activeJob, activeMyJob, role })); } catch(e){}
+      }, [screen, phone, code, activeWorker, activeJob, activeMyJob, role]);
+
+      // Apply palette + dark
+      React.useEffect(() => {
+        const p = PALETTES[settings.palette] || PALETTES.moviy;
+        document.documentElement.style.setProperty("--uddala-primary", p.primary);
+        document.documentElement.style.setProperty("--uddala-primary-dark", p.primaryDark);
+        document.documentElement.style.setProperty("--uddala-primary-soft", p.primaryBg);
+        document.body.classList.toggle("dark", !!settings.dark);
+      }, [settings.palette, settings.dark]);
+
+      // Tweaks host wiring
+      React.useEffect(() => {
+        const handler = (e) => {
+          const d = e.data || {};
+          if (d.type === "__activate_edit_mode") {
+            setTweaksEnabled(true);
+            setTweaksOpen(true);
+          } else if (d.type === "__deactivate_edit_mode") {
+            setTweaksEnabled(false);
+            setTweaksOpen(false);
+          }
+        };
+        window.addEventListener("message", handler);
+        try { window.parent.postMessage({ type: "__edit_mode_available" }, "*"); } catch(e){}
+        return () => window.removeEventListener("message", handler);
+      }, []);
+
+      const lang = settings.lang;
+
+      const go = (s) => setScreen(s);
+
+      // Screen renderer: returns customer screen + worker screen based on "screen" state.
+      // Pre-auth screens are shared (show same on both devices).
+
+      const renderPre = () => {
+        if (screen === "onboarding") {
+          return (
+            <OnboardingScreen
+              lang={lang}
+              onPick={(role) => {
+                // pick role just advances to phone entry; role selection is cosmetic here
+                // because both tracks use same auth, then we show both apps live
+                go("phone");
+              }}
+            />
+          );
+        }
+        if (screen === "phone") {
+          return (
+            <PhoneScreen
+              lang={lang}
+              phone={phone}
+              onChange={setPhone}
+              onBack={() => go("onboarding")}
+              onNext={() => go("otp")}
+            />
+          );
+        }
+        if (screen === "otp") {
+          return (
+            <OtpScreen
+              lang={lang}
+              phone={phone}
+              code={code}
+              onChange={setCode}
+              onBack={() => go("phone")}
+              onVerify={() => go("app")}
+            />
+          );
+        }
+        return null;
+      };
+
+      // Post-auth: dual app view — both devices show the SAME role.
+      const [cTab, setCTab] = React.useState("home");
+      const [wTab, setWTab] = React.useState("home");
+      const [cView, setCView] = React.useState(null); // null | worker | post | bids | chat
+      const [wView, setWView] = React.useState(null); // null | job | chat
+      const [posting, setPosting] = React.useState(false);
+      const [role, setRole] = React.useState(persisted.role || "customer"); // "customer" | "worker"
+
+      const CustomerApp = () => {
+        if (posting) {
+          return (
+            <PostJobWizard
+              lang={lang}
+              variant={settings.postFlow}
+              onClose={() => setPosting(false)}
+              onPublish={() => {
+                setPosting(false);
+                setCTab("my-jobs");
+              }}
+            />
+          );
+        }
+        if (cView === "worker") {
+          return (
+            <WorkerProfile
+              lang={lang}
+              workerId={activeWorker}
+              onBack={() => setCView(null)}
+              onChat={() => { setCView("chat"); }}
+            />
+          );
+        }
+        if (cView === "bids") {
+          return (
+            <BidsScreen
+              lang={lang}
+              jobId={activeMyJob}
+              onBack={() => setCView(null)}
+              onChat={() => setCView("chat")}
+            />
+          );
+        }
+        if (cView === "chat") {
+          return (
+            <ChatScreen lang={lang} workerId={activeWorker} onBack={() => setCView(null)} />
+          );
+        }
+        let content;
+        if (cTab === "home") {
+          content = (
+            <CustomerHome
+              lang={lang}
+              onPost={() => setPosting(true)}
+              onOpenWorker={(id) => { setActiveWorker(id); setCView("worker"); }}
+              onOpenCategory={() => {}}
+            />
+          );
+        } else if (cTab === "my-jobs") {
+          content = (
+            <MyJobsScreen
+              lang={lang}
+              onOpen={(id) => { setActiveMyJob(id); setCView("bids"); }}
+            />
+          );
+        } else if (cTab === "messages") {
+          content = (
+            <MessagesScreen lang={lang} onOpen={(id) => { setActiveWorker(id); setCView("chat"); }} />
+          );
+        } else if (cTab === "profile") {
+          content = <CustomerProfile lang={lang} />;
+        }
+        return (
+          <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+            <div style={{ flex: 1, minHeight: 0 }}>{content}</div>
+            <BottomNav
+              current={cTab}
+              role="customer"
+              lang={lang}
+              onNav={(id) => {
+                if (id === "post") setPosting(true);
+                else setCTab(id);
+              }}
+            />
+          </div>
+        );
+      };
+
+      const WorkerApp = () => {
+        if (wView === "job") {
+          return (
+            <>
+              <JobDetail
+                lang={lang}
+                jobId={activeJob}
+                onBack={() => setWView(null)}
+                onBid={() => setBidSheet(true)}
+              />
+              {bidSheet && (
+                <BidSheet
+                  lang={lang}
+                  jobId={activeJob}
+                  onClose={() => setBidSheet(false)}
+                  onSent={() => {
+                    setBidSheet(false);
+                    setTanga(Math.max(0, tanga - 3));
+                    setWView(null);
+                  }}
+                />
+              )}
+            </>
+          );
+        }
+        if (wView === "chat") {
+          return <ChatScreen lang={lang} workerId={"w1"} onBack={() => setWView(null)} />;
+        }
+        let content;
+        if (wTab === "home") {
+          content = (
+            <WorkerHome
+              lang={lang}
+              tanga={tanga}
+              onOpenJob={(id) => { setActiveJob(id); setWView("job"); }}
+              onOpenWallet={() => setWTab("wallet")}
+            />
+          );
+        } else if (wTab === "wallet") {
+          content = <WalletScreen lang={lang} tanga={tanga} onTopUp={(n) => setTanga(tanga + n)} />;
+        } else if (wTab === "messages") {
+          content = <MessagesScreen lang={lang} onOpen={() => setWView("chat")} />;
+        } else if (wTab === "profile") {
+          content = <WorkerProfileSelf lang={lang} />;
+        }
+        return (
+          <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+            <div style={{ flex: 1, minHeight: 0 }}>{content}</div>
+            <BottomNav current={wTab} role="worker" lang={lang} onNav={setWTab} />
+          </div>
+        );
+      };
+
+      const isPre = screen !== "app";
+
+      // Header nav — login screens always visible, then app screens
+      const quickNav = [
+        { id: "onboarding", label: "1. Rol tanlash", group: "login" },
+        { id: "phone", label: "2. Telefon", group: "login" },
+        { id: "otp", label: "3. OTP", group: "login" },
+        { id: "c-home", label: "Mijoz: bosh" },
+        { id: "c-post", label: "Mijoz: e’lon" },
+        { id: "c-worker", label: "Mijoz: xodim" },
+        { id: "c-bids", label: "Mijoz: takliflar" },
+        { id: "c-chat", label: "Mijoz: chat" },
+        { id: "w-home", label: "Xodim: feed" },
+        { id: "w-job", label: "Xodim: ish" },
+        { id: "w-bid", label: "Xodim: taklif" },
+        { id: "w-wallet", label: "Xodim: Tanga" },
+        { id: "w-profile", label: "Xodim: profil" },
+      ];
+
+      const runQuick = (id) => {
+        if (id === "onboarding" || id === "phone" || id === "otp" || id === "app") {
+          setScreen(id);
+          if (id === "app") {
+            setCTab("home"); setCView(null); setPosting(false);
+            setWTab("home"); setWView(null);
+          }
+          return;
+        }
+        if (id.startsWith("c-")) setRole("customer");
+        if (id.startsWith("w-")) setRole("worker");
+        if (id === "c-home") { setScreen("app"); setCTab("home"); setCView(null); setPosting(false); }
+        if (id === "c-post") { setScreen("app"); setPosting(true); }
+        if (id === "c-worker") { setScreen("app"); setPosting(false); setCView("worker"); }
+        if (id === "c-bids") { setScreen("app"); setPosting(false); setCView("bids"); }
+        if (id === "c-chat") { setScreen("app"); setPosting(false); setCView("chat"); }
+        if (id === "w-home") { setScreen("app"); setWTab("home"); setWView(null); }
+        if (id === "w-job") { setScreen("app"); setWTab("home"); setWView("job"); setBidSheet(false); }
+        if (id === "w-bid") { setScreen("app"); setWTab("home"); setWView("job"); setBidSheet(true); }
+        if (id === "w-wallet") { setScreen("app"); setWTab("wallet"); setWView(null); }
+        if (id === "w-profile") { setScreen("app"); setWTab("profile"); setWView(null); }
+      };
+
+      return (
+        <div className="app-page">
+          <div className="stage">
+            <div className="stage-header">
+              <div data-screen-label="00 Page Header" style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                <Logo size={40} />
+                <h1>Uddala</h1>
+              </div>
+              <p>C2C xizmatlar marketplace — O‘zbekiston · Interaktiv prototip</p>
+            </div>
+
+            <div className="screen-nav">
+              {quickNav.map((n, i) => {
+                let active = false;
+                if (isPre) active = n.id === screen;
+                else {
+                  const isCustomer = role === "customer";
+                  const isWorker = role === "worker";
+                  if (n.id === "c-post") active = isCustomer && posting;
+                  else if (n.id === "c-worker") active = isCustomer && cView === "worker";
+                  else if (n.id === "c-bids") active = isCustomer && cView === "bids";
+                  else if (n.id === "c-chat") active = isCustomer && cView === "chat";
+                  else if (n.id === "c-home") active = isCustomer && !posting && !cView && cTab === "home";
+                  else if (n.id === "w-home") active = isWorker && !wView && wTab === "home";
+                  else if (n.id === "w-job") active = isWorker && wView === "job" && !bidSheet;
+                  else if (n.id === "w-bid") active = isWorker && wView === "job" && bidSheet;
+                  else if (n.id === "w-wallet") active = isWorker && wTab === "wallet";
+                  else if (n.id === "w-profile") active = isWorker && wTab === "profile";
+                }
+                const prevGroup = i > 0 ? quickNav[i - 1].group : null;
+                const needsDivider = n.group !== prevGroup && i > 0;
+                return (
+                  <React.Fragment key={n.id}>
+                    {needsDivider && <span className="nav-divider" aria-hidden="true" />}
+                    <button
+                      className={active ? "active" : ""}
+                      onClick={() => runQuick(n.id)}
+                    >
+                      {n.label}
+                    </button>
+                  </React.Fragment>
+                );
+              })}
+            </div>
+
+            {isPre ? (
+              <div className="pair">
+                <div className="device-wrap" data-screen-label={`iOS — ${screen}`}>
+                  <IOSDevice dark={settings.dark}>{renderPre()}</IOSDevice>
+                  <div className="device-label">Login · iOS</div>
+                </div>
+                <div className="device-wrap" data-screen-label={`Android — ${screen}`}>
+                  <AndroidDevice dark={settings.dark}>{renderPre()}</AndroidDevice>
+                  <div className="device-label">Login · Android</div>
+                </div>
+              </div>
+            ) : (
+              <div className="pair">
+                <div className="device-wrap" data-screen-label={`iOS — ${role === "customer" ? "Mijoz" : "Xodim"}`}>
+                  <IOSDevice dark={settings.dark}>{role === "customer" ? <CustomerApp /> : <WorkerApp />}</IOSDevice>
+                  <div className="device-label">{role === "customer" ? "Mijoz" : "Xodim"} · iOS</div>
+                </div>
+                <div className="device-wrap" data-screen-label={`Android — ${role === "customer" ? "Mijoz" : "Xodim"}`}>
+                  <AndroidDevice dark={settings.dark}>{role === "customer" ? <CustomerApp /> : <WorkerApp />}</AndroidDevice>
+                  <div className="device-label">{role === "customer" ? "Mijoz" : "Xodim"} · Android</div>
+                </div>
+              </div>
+            )}
+
+            <div style={{ textAlign: "center", fontSize: 12, color: "var(--uddala-text-soft)", fontWeight: 600, maxWidth: 640, lineHeight: 1.6, padding: "0 20px 40px" }}>
+              Yuqoridagi tugmalar bilan ekranlar o'rtasida o'tishingiz mumkin. Har bir ekran iOS va Android'da bir xil ko'rinishda ko'rinadi.
+              Rang, til va oqim variantini o‘zgartirish uchun <b>Tweaks</b> panelini oching.
+            </div>
+          </div>
+
+          {tweaksEnabled && (
+            <button className="tweak-toggle show" onClick={() => setTweaksOpen(!tweaksOpen)}>
+              ⚙ Tweaks
+            </button>
+          )}
+
+          <TweaksPanel
+            open={tweaksOpen}
+            onClose={() => setTweaksOpen(false)}
+            settings={settings}
+            setSettings={setSettings}
+          />
+        </div>
+      );
+    }
+
+    function CustomerProfile({ lang }) {
+      const t = (k) => T[k][lang];
+      return (
+        <div style={{ height: "100%", display: "flex", flexDirection: "column", background: "var(--uddala-surface)" }}>
+          <AppHeader title={t("profile")} trailing={<IconBtn icon="menu" />} />
+          <div style={{ padding: "0 20px", display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ padding: 18, borderRadius: 20, border: "1px solid var(--uddala-border)", display: "flex", alignItems: "center", gap: 14 }}>
+              <Avatar name="Dilshod Aliyev" size={56} color="#8B5CF6" />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 16, fontWeight: 800 }}>Dilshod Aliyev</div>
+                <div style={{ fontSize: 12, color: "var(--uddala-text-muted)", fontWeight: 600, marginTop: 2 }}>+998 99 299 39 39</div>
+              </div>
+            </div>
+            <div style={{ borderRadius: 16, border: "1px solid var(--uddala-border)", overflow: "hidden", background: "var(--uddala-surface)" }}>
+              <SettingsRow icon="map-pin" label="Manzillarim" value="2 ta" />
+              <SettingsRow icon="briefcase" label={t("myJobs")} value="3" />
+              <SettingsRow icon="telegram" label={t("tgNotif")} value={<Badge tone="success">● {t("tgConnected")}</Badge>} />
+              <SettingsRow icon="shield" label="Maxfiylik" value="" last />
+            </div>
+            <div style={{ fontSize: 11, color: "var(--uddala-text-soft)", fontWeight: 700, textAlign: "center", padding: "8px 0" }}>
+              Uddala v1.0 · Tashkent
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>

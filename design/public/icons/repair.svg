@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 32 32">
+
+        <g transform="rotate(-40 16 16)">
+          <path d="M11.5 4.5 A5.5 5.5 0 0 0 11.5 12.5 V15.5 L21.5 15.5 V12.5 A5.5 5.5 0 0 0 21.5 4.5 L19.5 7 V9 H13.5 V7 Z" fill="#9934c1" opacity="0.2"></path>
+          <path d="M11 4 A5.5 5.5 0 0 0 11 12 V15 L21 15 V12 A5.5 5.5 0 0 0 21 4 L19 6.5 V8.5 H13 V6.5 Z" fill="#B23CE0" stroke="#9934c1" stroke-width="1.3" stroke-linejoin="round"></path>
+          <rect x="14" y="14" width="4" height="15" rx="0.5" fill="#B23CE0" stroke="#9934c1" stroke-width="1.3"></rect>
+          <rect x="14.5" y="15" width="1.3" height="13" fill="white" opacity="0.4"></rect>
+        </g>
+        <g transform="rotate(45 16 16)">
+          <rect x="13" y="3" width="6" height="10" rx="1" fill="#F5B700" stroke="#9934c1" stroke-width="1.3"></rect>
+          <rect x="13.5" y="4" width="1.5" height="8" fill="white" opacity="0.5"></rect>
+          <rect x="12.5" y="13" width="7" height="3.5" rx="0.5" fill="#9934c1"></rect>
+          <rect x="14.5" y="16.5" width="3" height="12" fill="#eccef7" stroke="#9934c1" stroke-width="1.3"></rect>
+          <polygon points="14.5,28.5 17.5,28.5 16,30" fill="#9934c1"></polygon>
+        </g>
+</svg>
