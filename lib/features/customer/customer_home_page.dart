@@ -104,35 +104,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
       backgroundColor: AppColors.surface,
       body: SafeArea(
         bottom: false,
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: _Header(
-                onLogout: _logout,
-                onRefreshLocation: () => _initLocation(force: true),
-              ),
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 12)),
-            const SliverToBoxAdapter(child: _SearchField()),
-            const SliverToBoxAdapter(child: SizedBox(height: 14)),
-            SliverToBoxAdapter(child: _PostJobCta(onTap: _onPostJob)),
-            const SliverToBoxAdapter(child: SizedBox(height: 22)),
-            SliverToBoxAdapter(
-              child: _SectionHeader(title: 'Kategoriyalar', onTapAll: _onPostJob),
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 12)),
-            SliverToBoxAdapter(child: _CategoriesGrid(onTap: _onPostJob)),
-            const SliverToBoxAdapter(child: SizedBox(height: 22)),
-            const SliverToBoxAdapter(child: _SectionHeader(title: 'Sizga yaqin xodimlar')),
-            const SliverToBoxAdapter(child: SizedBox(height: 10)),
-            SliverList.separated(
-              itemCount: _demoWorkers.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 10),
-              itemBuilder: (_, i) => _WorkerCard(worker: _demoWorkers[i]),
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 120)),
-          ],
-        ),
+        child: _tab == 4 ? _ProfileTab(onLogout: _logout) : _buildHomeTab(),
       ),
       floatingActionButton: _CenterFab(onTap: _onPostJob),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -140,6 +112,177 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         current: _tab,
         onTap: (i) => setState(() => _tab = i),
       ),
+    );
+  }
+
+  Widget _buildHomeTab() {
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: _Header(
+            onLogout: _logout,
+            onRefreshLocation: () => _initLocation(force: true),
+          ),
+        ),
+        const SliverToBoxAdapter(child: SizedBox(height: 12)),
+        const SliverToBoxAdapter(child: _SearchField()),
+        const SliverToBoxAdapter(child: SizedBox(height: 14)),
+        SliverToBoxAdapter(child: _PostJobCta(onTap: _onPostJob)),
+        const SliverToBoxAdapter(child: SizedBox(height: 22)),
+        SliverToBoxAdapter(
+          child: _SectionHeader(title: 'Kategoriyalar', onTapAll: _onPostJob),
+        ),
+        const SliverToBoxAdapter(child: SizedBox(height: 12)),
+        SliverToBoxAdapter(child: _CategoriesGrid(onTap: _onPostJob)),
+        const SliverToBoxAdapter(child: SizedBox(height: 22)),
+        const SliverToBoxAdapter(child: _SectionHeader(title: 'Sizga yaqin xodimlar')),
+        const SliverToBoxAdapter(child: SizedBox(height: 10)),
+        SliverList.separated(
+          itemCount: _demoWorkers.length,
+          separatorBuilder: (_, _) => const SizedBox(height: 10),
+          itemBuilder: (_, i) => _WorkerCard(worker: _demoWorkers[i]),
+        ),
+        const SliverToBoxAdapter(child: SizedBox(height: 120)),
+      ],
+    );
+  }
+}
+
+class _ProfileTab extends StatefulWidget {
+  const _ProfileTab({required this.onLogout});
+  final Future<void> Function() onLogout;
+
+  @override
+  State<_ProfileTab> createState() => _ProfileTabState();
+}
+
+class _ProfileTabState extends State<_ProfileTab> {
+  Map<String, dynamic>? _me;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final me = await AuthService.instance.me();
+      if (!mounted) return;
+      setState(() {
+        _me = me;
+        _loading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _confirmLogout() async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Chiqish'),
+        content: const Text('Akkauntdan chiqishni xohlaysizmi?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Bekor qilish'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Chiqish'),
+          ),
+        ],
+      ),
+    );
+    if (ok == true) await widget.onLogout();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    final phone = _me?['phone']?.toString() ?? '';
+    final fio = (_me?['fio']?.toString().trim().isNotEmpty ?? false)
+        ? _me!['fio'].toString()
+        : 'Foydalanuvchi';
+    final initials = fio.isNotEmpty ? fio.trim()[0].toUpperCase() : 'U';
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 120),
+      children: [
+        Row(
+          children: [
+            CircleAvatar(
+              radius: 32,
+              backgroundColor: AppColors.primarySoft,
+              child: Text(
+                initials,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.primaryDark,
+                ),
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    fio,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.text,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    phone,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColors.textMuted,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 28),
+        InkWell(
+          onTap: _confirmLogout,
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              border: Border.all(color: AppColors.border),
+              borderRadius: BorderRadius.circular(AppRadius.md),
+            ),
+            child: Row(
+              children: const [
+                Icon(Icons.logout, color: Colors.red, size: 20),
+                SizedBox(width: 12),
+                Text(
+                  'Chiqish',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.red,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
